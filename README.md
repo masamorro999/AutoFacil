@@ -1,2 +1,3 @@
-# AutoFacil
-repo creado en paralelo para control de versiones de la app movil autofacil
+# AutosRA
+
+applicacion para gestion de venta de vehiculos $$$
