@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
-using AutosRA.Domain;
-using AutosRa.Backend.Models;
-
-namespace AutosRa.Backend.Controllers
+﻿namespace AutosRa.Backend.Controllers
 {
+    using System.Data.Entity;
+    using System.Threading.Tasks;
+    using System.Net;
+    using System.Web.Mvc;
+    using AutosRA.Domain;
+    using AutosRa.Backend.Models;
+    using AutosRa.Backend.Helpers;
+    using AutosRA.Backend.Models;
+    using System;
+
+    //[Authorize]
     public class VehiclesController : Controller
     {
         private DataContextLocal db = new DataContextLocal();
@@ -22,7 +21,7 @@ namespace AutosRa.Backend.Controllers
             var vehicles = db.Vehicles.Include(v => v.Category);
             return View(await vehicles.ToListAsync());
         }
-
+         
         // GET: Vehicles/Details/5
         public async Task<ActionResult> Details(int? id)
         {
@@ -45,22 +44,49 @@ namespace AutosRa.Backend.Controllers
             return View();
         }
 
-        // POST: Vehicles/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "VehicleId,CategoryId,Description,Price,IsActive,LastPurchase,Stock,Remarks")] Vehicle vehicle)
+        public async Task<ActionResult> Create(VehicleView view)
         {
             if (ModelState.IsValid)
             {
+                var pic = string.Empty;
+                var folder = "~/Content/Images";
+
+                if (view.ImageFile != null)
+                {
+                    pic = FilesHelper.UploadPhoto(view.ImageFile, folder);
+                    pic = string.Format("{0}/{1}", folder, pic);
+                }
+
+                var vehicle = ToVehicle(view);
+                vehicle.Image = pic;
                 db.Vehicles.Add(vehicle);
+
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Description", vehicle.CategoryId);
-            return View(vehicle);
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Description", view.CategoryId);
+            return View(view);
+        }
+
+        private Vehicle ToVehicle(VehicleView view)
+        {
+            return new Vehicle
+            {
+                Category = view.Category,
+                CategoryId = view.CategoryId,
+                Description = view.Description,
+                Image = view.Image,
+                IsActive = view.IsActive,
+                LastPurchase = view.LastPurchase,
+                Price = view.Price,
+                VehicleId = view.VehicleId,
+                Remarks = view.Remarks,
+                Stock = view.Stock
+            };
         }
 
         // GET: Vehicles/Edit/5
@@ -70,30 +96,63 @@ namespace AutosRa.Backend.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Vehicle vehicle = await db.Vehicles.FindAsync(id);
+
+            var vehicle = await db.Vehicles.FindAsync(id);
+
             if (vehicle == null)
             {
                 return HttpNotFound();
             }
             ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Description", vehicle.CategoryId);
-            return View(vehicle);
+            var view = Toview(vehicle);
+
+            return View(view);
+        }
+
+        private VehicleView Toview(Vehicle vehicle)
+        {
+            return new VehicleView
+            {
+                Category = vehicle.Category,
+                CategoryId = vehicle.CategoryId,
+                Description = vehicle.Description,
+                Image = vehicle.Image,
+                IsActive = vehicle.IsActive,
+                LastPurchase = vehicle.LastPurchase,
+                Price = vehicle.Price,
+                VehicleId = vehicle.VehicleId,
+                Remarks = vehicle.Remarks,
+                Stock = vehicle.Stock
+            };
         }
 
         // POST: Vehicles/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "VehicleId,CategoryId,Description,Price,IsActive,LastPurchase,Stock,Remarks")] Vehicle vehicle)
+        public async Task<ActionResult> Edit( VehicleView view)
         {
             if (ModelState.IsValid)
             {
+                var pic = view.Image;
+                var folder = "~/Content/Images";
+
+                if (view.ImageFile != null)
+                {
+                    pic = FilesHelper.UploadPhoto(view.ImageFile, folder);
+                    pic = string.Format("{0}/{1}", folder, pic);
+                }
+
+                var vehicle = ToVehicle(view);
+                vehicle.Image = pic;
+
                 db.Entry(vehicle).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Description", vehicle.CategoryId);
-            return View(vehicle);
+
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Description", view.CategoryId);
+            return View(view);
         }
 
         // GET: Vehicles/Delete/5

@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
-using AutosRA.Domain;
-
-namespace AutosRa.Backend.Models
+﻿namespace AutosRa.Backend.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Net;
+    using System.Web;
+    using System.Web.Mvc;
+    using AutosRA.Domain;
+
+    [Authorize]
     public class CategoriesController : Controller
     {
         private DataContextLocal db = new DataContextLocal();

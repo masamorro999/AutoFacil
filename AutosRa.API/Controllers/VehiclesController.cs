@@ -13,6 +13,7 @@ using AutosRA.Domain;
 
 namespace AutosRa.API.Controllers
 {
+    //[Authorize]
     public class VehiclesController : ApiController
     {
         private DataContext db = new DataContext();
