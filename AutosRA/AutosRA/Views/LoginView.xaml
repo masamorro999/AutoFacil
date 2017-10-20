@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage 
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+    x:Class="AutosRA.Views.LoginView"
+    BindingContext="{Binding Main, Source={StaticResource Locator}}"
+    Title="Login">
+    
+	<ContentPage.Content>
+        <StackLayout
+            BindingContext="{Binding Login}"
+            Padding="8"
+            Spacing="16">
+            <Label
+                FontAttributes="Bold"
+                FontSize="Large"
+                HorizontalOptions="Center"
+                Text="Vehicles"/>
+
+            <Grid
+                Margin="20,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image  
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Source="Mail.png"
+                    VerticalOptions="Center">
+                </Image>
+                <Entry
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    Keyboard="Email"
+                    Text="{Binding Email, Mode=TwoWay}"
+                    Placeholder="Enter your email">
+                </Entry>
+
+                <Image
+                    Grid.Column="0"
+                    Grid.Row="1"
+                    Source="Lock.png"
+                    VerticalOptions="Center">
+                </Image>
+                <Entry
+                    IsPassword="true"
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    Text="{Binding Password, Mode=TwoWay}"
+                    Placeholder="Enter your password">
+                </Entry>
+            </Grid>
+            <StackLayout
+                HorizontalOptions="Center"
+                Orientation="Horizontal">
+                <Label
+                    Text="Remember Me"
+                    VerticalOptions="Center">
+                </Label>
+                <Switch
+                    IsToggled="{Binding IsToggled, Mode=TwoWay}">
+                </Switch>
+            </StackLayout>
+            <ActivityIndicator
+                IsRunning="{Binding IsRunning, Mode=TwoWay}">
+            </ActivityIndicator>
+            <StackLayout
+                Margin="30,0">
+                <Button
+                    Command="{Binding LoginCommand}"
+                    BackgroundColor="Gray"
+                    BorderRadius="23"
+                    HeightRequest="46"
+                    FontAttributes="Bold"
+                    IsEnabled="{Binding IsEnabled, Mode=TwoWay}"
+                    Text="Login"
+                    TextColor="White">
+                </Button>
+                <Button
+                    Command="{Binding RegisterNewUserCommand}"
+                    BackgroundColor="Purple"
+                    BorderRadius="23"
+                    HeightRequest="46"
+                    FontAttributes="Bold"
+                    IsEnabled="{Binding IsEnabled, Mode=TwoWay}"
+                    Text="Register New User"
+                    TextColor="White">
+                </Button>
+                <Button
+                    Command="{Binding LoginWithFacebookCommand}"
+                    BackgroundColor="Navy"
+                    BorderRadius="23"
+                    HeightRequest="46"
+                    FontAttributes="Bold"
+                    IsEnabled="{Binding IsEnabled, Mode=TwoWay}"
+                    Text="Login with Facebook"
+                    TextColor="White">
+                </Button>
+                
+            </StackLayout>
+
+            <Label
+                Text="Forgot your passward?"
+                HorizontalOptions="Center"
+                TextColor="Blue">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding RecoverPasswordCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+        </StackLayout>
+	</ContentPage.Content>
+
+    
+</ContentPage>

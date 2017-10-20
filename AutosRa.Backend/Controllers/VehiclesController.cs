@@ -10,7 +10,7 @@
     using AutosRA.Backend.Models;
     using System;
 
-    //[Authorize]
+    [Authorize]
     public class VehiclesController : Controller
     {
         private DataContextLocal db = new DataContextLocal();
