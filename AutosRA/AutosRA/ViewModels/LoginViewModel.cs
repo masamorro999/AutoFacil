@@ -3,8 +3,10 @@
     using System;
     using System.ComponentModel;
     using System.Windows.Input;
+    using Views;
     using GalaSoft.MvvmLight.Command;
     using Services;
+    using Xamarin.Forms;
 
     public class LoginViewModel : INotifyPropertyChanged
     {
@@ -13,7 +15,10 @@
         #endregion
 
         #region Services
+
+        ApiService apiService;
         DialogService dialogService;
+
         #endregion
 
         #region Atributes
@@ -120,6 +125,7 @@
         #region Constructors
         public LoginViewModel()
         {
+            apiService = new ApiService();
             dialogService = new DialogService();
 
             IsEnabled = true;
@@ -150,6 +156,51 @@
                 await dialogService.ShowMessage("Error", "You must enter a valid password.");
                 return;
             }
+
+            IsRunning = true;
+            IsEnabled = false;
+
+            var connection = await apiService.CheckConnection();
+            if(!connection.IsSuccess)
+            {
+                IsRunning = false;
+                IsEnabled = true;
+                await dialogService.ShowMessage("Error", connection.Message);
+                return;
+            }
+
+            var response = await apiService.GetToken(
+                "http://autosraapi.azurewebsites.net", 
+                Email, 
+                Password);
+
+            if (response == null )
+            {
+                IsRunning = false;
+                IsEnabled = true;
+                await dialogService.ShowMessage(
+                    "Error", 
+                    "The service is not available, please try again latter.");
+                Password = null;
+                return;
+            }
+            if (string.IsNullOrEmpty(response.AccessToken))
+            {
+                IsRunning = false;
+                IsEnabled = true;
+                await dialogService.ShowMessage("Error", response.ErrorDescription);
+                Password = null;
+                return;
+            }
+
+            var mainViewModel = MainViewModel.GetInstance();
+            mainViewModel.Token = response;
+            mainViewModel.Categories = new CategoriesViewModel();
+            await Application.Current.MainPage.Navigation.PushAsync(new CategoriesView());
+            Email = null;
+            Password = null;
+            IsRunning = false;
+            IsEnabled = true;
         }
         #endregion
 
