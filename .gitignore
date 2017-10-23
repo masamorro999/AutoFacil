@@ -286,3 +286,4 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+/AutosRA/AutosRA.Android/AutosRA.Android.csproj.bak
