@@ -4,24 +4,52 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Description;
-using AutosRA.Domain;
-
 namespace AutosRa.API.Controllers
 {
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Description;
+    using AutosRA.Domain;
+    using AutosRa.API.Models;
+
     //[Authorize]
     public class CategoriesController : ApiController
     {
         private DataContext db = new DataContext();
 
         // GET: api/Categories
-        public IQueryable<Category> GetCategories()
+        public async Task<IHttpActionResult> GetCategories()
         {
-            return db.Categories;
+            var categories = await db.Categories.ToListAsync();
+            var categoriesResponse = new List<CategoryResponse>();
+            foreach (var category in categories)
+            {
+                var vehiclesResponse = new List<VehicleResponse>();
+                foreach (var vehicle in category.Vehicles)
+                {
+                    vehiclesResponse.Add(new VehicleResponse
+                    {
+                        Description = vehicle.Description,
+                        Image = vehicle.Image,
+                        IsActive = vehicle.IsActive,
+                        LastPurchase = vehicle.LastPurchase,
+                        Price = vehicle.Price,
+                        VehicleId = vehicle.VehicleId,
+                        Remarks = vehicle.Remarks,
+                        Stock = vehicle.Stock
+                    
+                    });
+                }
+                categoriesResponse.Add(new CategoryResponse
+                {
+                    CategoryId = category.CategoryId,
+                    Description = category.Description,
+                    Vehicles = vehiclesResponse,
+                });
+            }
+            return Ok(categoriesResponse);
         }
 
         // GET: api/Categories/5
