@@ -24,6 +24,18 @@
             get;
             set;
         }
+
+        public VehiclesViewModel Vehicles
+        {
+            get;
+            set;
+        }
+
+        public NewCategoryViewModel NewCategory
+        {
+            get;
+            set;
+        }
         #endregion
 
         #region Constructor

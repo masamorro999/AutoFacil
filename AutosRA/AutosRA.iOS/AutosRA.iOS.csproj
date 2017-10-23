@@ -117,6 +117,8 @@
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
     <BundleResource Include="Resources\Lock.png" />
     <BundleResource Include="Resources\Mail.png" />
+    <BundleResource Include="Resources\chevronRight.png" />
+    <BundleResource Include="Resources\add.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

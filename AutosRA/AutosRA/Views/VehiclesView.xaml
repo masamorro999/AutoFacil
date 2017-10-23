@@ -2,24 +2,17 @@
 <ContentPage 
     xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-    x:Class="AutosRA.Views.CategoriesView"
+    x:Class="AutosRA.Views.VehiclesView"
     BindingContext="{Binding Main, Source={StaticResource Locator}}"
-    Title="Categories">
-
-    <ContentPage.ToolbarItems>
-        <ToolbarItem 
-            Command="{Binding NewCategoryCommand}"
-            Icon="add"/>
-    </ContentPage.ToolbarItems>
-    
+    Title="Vehicles">
 	<ContentPage.Content>
         <StackLayout
-            BindingContext="{Binding Categories}"
+            BindingContext="{Binding Vehicles}"
             Padding="5">
             <ListView
                 SeparatorVisibility="None"
                 HasUnevenRows="true"
-                ItemsSource="{Binding Categories}">
+                ItemsSource="{Binding Vehicles}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -28,20 +21,20 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Label
-                                    Grid.Column="0"
-                                    HorizontalOptions="FillAndExpand"
-                                    FontSize="Large"
-                                    VerticalOptions="Center"
-                                    Text="{Binding Description}">
-                                </Label>
                                 <Image
-                                    HorizontalOptions="End"
-                                    Source="chevronRight">
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding SelectCategoryCommand}"/>
-                                    </Image.GestureRecognizers>
+                                    Grid.Column="0"
+                                    HorizontalOptions="Start"
+                                    HeightRequest="100"
+                                    Source="{Binding ImageFullPath}"
+                                    WidthRequest="100">
                                 </Image>
+                                <Label
+                                    Grid.Column="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    FontSize="Medium"
+                                    Text="{Binding Description}"
+                                    VerticalOptions="Center">
+                                </Label>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>

@@ -54,6 +54,16 @@
     </Compile>
     <Compile Include="ViewModels\CategoriesViewModel.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Vehicle.cs" />
+    <Compile Include="Views\VehiclesView.xaml.cs">
+      <DependentUpon>VehiclesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\VehiclesViewModel.cs" />
+    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Views\NewCategoryView.xaml.cs">
+      <DependentUpon>NewCategoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\NewCategoryViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
@@ -64,6 +74,12 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\CategoriesView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\VehiclesView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\NewCategoryView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

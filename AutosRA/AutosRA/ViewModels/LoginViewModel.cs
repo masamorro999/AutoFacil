@@ -3,10 +3,8 @@
     using System;
     using System.ComponentModel;
     using System.Windows.Input;
-    using Views;
     using GalaSoft.MvvmLight.Command;
     using Services;
-    using Xamarin.Forms;
 
     public class LoginViewModel : INotifyPropertyChanged
     {
@@ -18,7 +16,7 @@
 
         ApiService apiService;
         DialogService dialogService;
-
+        NavigationService navigationService;
         #endregion
 
         #region Atributes
@@ -127,6 +125,10 @@
         {
             apiService = new ApiService();
             dialogService = new DialogService();
+            navigationService = new NavigationService();
+
+            Email = "ra@ra.com";
+            Password = "asdasd";
 
             IsEnabled = true;
             IsToggled = true;
@@ -196,7 +198,7 @@
             var mainViewModel = MainViewModel.GetInstance();
             mainViewModel.Token = response;
             mainViewModel.Categories = new CategoriesViewModel();
-            await Application.Current.MainPage.Navigation.PushAsync(new CategoriesView());
+            await navigationService.Navigate("CategoriesView");
             Email = null;
             Password = null;
             IsRunning = false;
