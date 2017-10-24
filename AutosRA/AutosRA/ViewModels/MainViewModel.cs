@@ -1,10 +1,16 @@
 ﻿namespace AutosRA.ViewModels
 {
     using System;
+    using System.Windows.Input;
     using AutosRA.Models;
+    using GalaSoft.MvvmLight.Command;
+    using Services;
 
     public class MainViewModel
     {
+        #region Services
+        NavigationService navigationService;
+        #endregion
 
         #region Properties
         public LoginViewModel Login
@@ -43,6 +49,7 @@
         public MainViewModel()
         {
             instance = this;
+            navigationService = new NavigationService();
             Login = new LoginViewModel();
         }
 
@@ -58,6 +65,22 @@
                 return new MainViewModel();
             }
             return instance;
+        }
+        #endregion
+
+        #region Commands
+        public ICommand NewCategoryCommand
+        {
+            get
+            {
+                return new RelayCommand(AddNewCategory);
+            }
+        }
+
+        async void AddNewCategory()
+        {
+            NewCategory = new NewCategoryViewModel();
+            await navigationService.Navigate("NewCategoryView");
         }
         #endregion
 

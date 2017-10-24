@@ -16,9 +16,17 @@
                     break;
                 case "VehiclesView":
                     await Application.Current.MainPage.Navigation.PushAsync(new VehiclesView());
-                    break; 
+                    break;  
+                case "NewCategoryView":
+                    await Application.Current.MainPage.Navigation.PushAsync(new NewCategoryView());
+                    break;         
             }
 
+        }
+
+        public async Task Back()
+        {
+            await Application.Current.MainPage.Navigation.PopAsync();
         }
     }
 }

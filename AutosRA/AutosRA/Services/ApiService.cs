@@ -188,8 +188,12 @@
         }
 
         public async Task<Response> Post<T>(
-            string urlBase, string servicePrefix, string controller,
-            string tokenType, string accessToken, T model)
+            string urlBase, 
+            string servicePrefix, 
+            string controller,
+            string tokenType, 
+            string accessToken, 
+            T model)
         {
             try
             {
@@ -200,17 +204,15 @@
                 client.BaseAddress = new Uri(urlBase);
                 var url = string.Format("{0}{1}", servicePrefix, controller);
                 var response = await client.PostAsync(url, content);
+                var result = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return new Response
-                    {
-                        IsSuccess = false,
-                        Message = response.StatusCode.ToString(),
-                    };
+                    var error = JsonConvert.DeserializeObject<Response>(result);
+                    return error;
                 }
 
-                var result = await response.Content.ReadAsStringAsync();
+
                 var newRecord = JsonConvert.DeserializeObject<T>(result);
 
                 return new Response

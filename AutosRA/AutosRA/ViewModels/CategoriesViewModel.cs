@@ -11,6 +11,7 @@
     public class CategoriesViewModel : INotifyPropertyChanged
     {
         #region Attributes
+        List<Category> categories;
         public ObservableCollection<Category> _categories;
         #endregion
 
@@ -24,7 +25,7 @@
         #endregion
 
         #region Properties
-        public ObservableCollection<Category> Categories
+        public ObservableCollection<Category> CategoriesList
         {
             get
             {
@@ -37,7 +38,7 @@
                     _categories = value;
                     PropertyChanged?.Invoke(
                         this, 
-                        new PropertyChangedEventArgs(nameof(Categories)));
+                        new PropertyChangedEventArgs(nameof(CategoriesList)));
                 }
             }
         }
@@ -47,14 +48,36 @@
         #region Constructor
         public CategoriesViewModel()
         {
+            instance = this;
+
             apiService = new ApiService();
             dialogService = new DialogService();
             LoadCategories();
         }
         #endregion
 
+        #region Singleton
+        static CategoriesViewModel instance;
+
+        public static CategoriesViewModel GetInstance()
+        {
+            if (instance == null)
+            {
+                return new CategoriesViewModel();
+            }
+            return instance;
+        }
+        #endregion
+
 
         #region Methods
+        public void  AddCategory(Category category)
+        {
+            categories.Add(category);
+            CategoriesList = new ObservableCollection<Category>(
+                categories.OrderBy(c => c.Description));
+        }
+
         async void LoadCategories()
         {
             var connection = await apiService.CheckConnection();
@@ -79,8 +102,8 @@
                 await dialogService.ShowMessage("Error", response.Message);
                 return;
             }
-            var categories = (List<Category>)response.Result;
-            Categories = new ObservableCollection<Category>(
+            categories = (List<Category>)response.Result;
+            CategoriesList = new ObservableCollection<Category>(
                 categories.OrderBy(c => c.Description));
         }
         #endregion

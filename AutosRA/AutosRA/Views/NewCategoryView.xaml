@@ -9,6 +9,29 @@
         <StackLayout
             BindingContext="{Binding NewCategory}"
             Padding="10">
+            <Label
+                Text="Category:">
+            </Label>
+            <Entry
+                Text="{Binding Description, Mode=TwoWay}"
+                Placeholder="Enter category description...">
+            </Entry>
+            <ActivityIndicator
+                IsRunning="{Binding IsRunning, Mode=TwoWay}"
+                VerticalOptions="CenterAndExpand">
+            </ActivityIndicator>
+            <Button
+                Command="{Binding SaveCommand}"
+                BackgroundColor="Gray"
+                BorderRadius="23"
+                HeightRequest="46"
+                FontAttributes="Bold"
+                IsEnabled="{Binding IsEnabled, Mode=TwoWay}"
+                Margin="50,0"
+                Text="Save"
+                TextColor="White"
+                VerticalOptions="EndAndExpand">
+            </Button>
         </StackLayout>
 	</ContentPage.Content>
 </ContentPage>

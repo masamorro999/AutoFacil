@@ -19,7 +19,7 @@
             <ListView
                 SeparatorVisibility="None"
                 HasUnevenRows="true"
-                ItemsSource="{Binding Categories}">
+                ItemsSource="{Binding CategoriesList}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
