@@ -95,7 +95,7 @@
                 return;
             }
 
-            CategoriesViewModel.GetInstance().DeleteCategory(this); 
+            await CategoriesViewModel.GetInstance().DeleteCategory(this); 
 
         }
         #endregion
