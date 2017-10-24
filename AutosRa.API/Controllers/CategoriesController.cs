@@ -110,8 +110,24 @@ namespace AutosRa.API.Controllers
             }
 
             db.Categories.Add(category);
-            await db.SaveChangesAsync();
 
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null && 
+                    ex.InnerException.InnerException != null &&
+                    ex.InnerException.InnerException.Message.Contains("Index"))
+                {
+                    return BadRequest("Thers is already a record with the same description");
+                }
+                else
+                {
+                    return BadRequest(ex.Message);
+                } 
+            }
             return CreatedAtRoute("DefaultApi", new { id = category.CategoryId }, category);
         }
 
