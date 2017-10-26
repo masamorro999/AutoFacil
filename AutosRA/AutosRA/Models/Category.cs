@@ -11,6 +11,7 @@
     {
         #region Services
         NavigationService navigationService;
+        DialogService dialogService;
         #endregion
 
         #region Properties
@@ -37,9 +38,16 @@
         public Category()
         {
             navigationService = new NavigationService();
+            dialogService = new DialogService();
         }
         #endregion
 
+        #region Methods
+        public override int GetHashCode()
+        {
+            return CategoryId;
+        }
+        #endregion
 
         #region Commands
         public ICommand SelectCategoryCommand
@@ -55,6 +63,40 @@
             var mainViewModel = MainViewModel.GetInstance();
             mainViewModel.Vehicles = new VehiclesViewModel(Vehicles);
             await navigationService.Navigate("VehiclesView");
+        }
+
+        public ICommand EditCommand
+        {
+            get
+            {
+                return new RelayCommand(Edit);
+            }
+        }
+
+        async void Edit ()
+        {
+            MainViewModel.GetInstance().EditCategory = new EditCategoryViewModel(this);
+            await navigationService.Navigate("EditCategoryView");
+        }
+
+        public ICommand DeleteCommand
+        {
+            get
+            {
+                return new RelayCommand(Delete);
+            }
+        }
+
+        async void Delete()
+        {
+            var response = await dialogService.ShowConfirm("Confirm", "Are you sure you want to delete this record?");
+            if (!response)
+            {
+                return;
+            }
+
+            await CategoriesViewModel.GetInstance().DeleteCategory(this); 
+
         }
         #endregion
     }

@@ -17,12 +17,26 @@
             BindingContext="{Binding Categories}"
             Padding="5">
             <ListView
+                IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}"
+                IsPullToRefreshEnabled="true"
                 SeparatorVisibility="None"
                 HasUnevenRows="true"
-                ItemsSource="{Binding CategoriesList}">
+                ItemsSource="{Binding CategoriesList}"
+                RefreshCommand="{Binding RefreshCommand}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem
+                                    Command="{Binding EditCommand}"
+                                    Text="Edit">
+                                </MenuItem>
+                                <MenuItem
+                                    Command="{Binding DeleteCommand}"
+                                    IsDestructive="true"
+                                    Text="Delete">
+                                </MenuItem>
+                            </ViewCell.ContextActions>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>

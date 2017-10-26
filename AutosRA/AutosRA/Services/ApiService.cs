@@ -287,23 +287,20 @@
                 client.BaseAddress = new Uri(urlBase);
                 var url = string.Format("{0}{1}/{2}", servicePrefix, controller, model.GetHashCode());
                 var response = await client.PutAsync(url, content);
+                var result = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return new Response
-                    {
-                        IsSuccess = false,
-                        Message = response.StatusCode.ToString(),
-                    };
-                }
+                    var error = JsonConvert.DeserializeObject<Response>(result);
+                    error.IsSuccess = false;
+                    return error;
+                } 
 
-                var result = await response.Content.ReadAsStringAsync();
                 var newRecord = JsonConvert.DeserializeObject<T>(result);
 
                 return new Response
                 {
                     IsSuccess = true,
-                    Message = "Record updated OK",
                     Result = newRecord,
                 };
             }
@@ -328,20 +325,18 @@
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(tokenType, accessToken);
                 var url = string.Format("{0}{1}/{2}", servicePrefix, controller, model.GetHashCode());
                 var response = await client.DeleteAsync(url);
+                var result = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return new Response
-                    {
-                        IsSuccess = false,
-                        Message = response.StatusCode.ToString(),
-                    };
+                    var error = JsonConvert.DeserializeObject<Response>(result);
+                    error.IsSuccess = false;
+                    return error;
                 }
 
                 return new Response
                 {
                     IsSuccess = true,
-                    Message = "Record deleted OK",
                 };
             }
             catch (Exception ex)
