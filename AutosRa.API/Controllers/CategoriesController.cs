@@ -85,15 +85,17 @@ namespace AutosRa.API.Controllers
             {
                 await db.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!CategoryExists(id))
+                if (ex.InnerException != null &&
+                    ex.InnerException.InnerException != null &&
+                    ex.InnerException.InnerException.Message.Contains("Index"))
                 {
-                    return NotFound();
+                    return BadRequest("Thers is already a record with the same description");
                 }
                 else
                 {
-                    throw;
+                    return BadRequest(ex.Message);
                 }
             }
 
@@ -142,6 +144,23 @@ namespace AutosRa.API.Controllers
             }
 
             db.Categories.Remove(category);
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null &&
+                    ex.InnerException.InnerException != null &&
+                    ex.InnerException.InnerException.Message.Contains("REFERENCE"))
+                {
+                    return BadRequest("You cant delete this record, because it has related records.");
+                }
+                else
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
             await db.SaveChangesAsync();
 
             return Ok(category);
